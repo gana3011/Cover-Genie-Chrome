@@ -1,13 +1,30 @@
+import { apiCall } from "./api.js";
 import { extractTextFromResume } from "./extractText.js";
+import { parseResume } from "./parseResume.js";
+
+let resumeText,jobDetails,coverLetter;
 
 
 document.getElementById("extractDetails").addEventListener("click", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "extractJobDetails" }, (response) => {
+        chrome.tabs.sendMessage(tabs[0].id, { action: "extractJobDetails" }, async (response) => {
             if (response && response.companyName) {
-                document.getElementById("companyName").innerText = response.companyName;
-                document.getElementById("jobTitle").innerText = response.position;
-                document.getElementById("jobDescription").innerText = response.jobDescription;
+                // document.getElementById("companyName").innerText = response.companyName;
+                // document.getElementById("jobTitle").innerText = response.position;
+                // document.getElementById("jobDescription").innerText = response.jobDescription;
+                jobDetails = `
+                Company Name: ${response.companyName}
+                Job Title: ${response.position}
+                Job Description: ${response.jobDescription}
+                `;
+                chrome.storage.sync.get("resumeText", async (data) => {
+                    resumeText = data.resumeText || "Resume data not available";
+                    coverLetter = await apiCall(resumeText, jobDetails);
+                    document.getElementById("coverLetter").innerText = coverLetter;
+                });                
+                // jobDetails = `Companyname:${response.companyName}\n JobTitle:${response.position}\n JobDesciption:${response.jobDescription}`;
+                // coverLetter = await apiCall(resumeText,jobDetails);
+                // document.getElementById("coverLetter").innerText = coverLetter;
             } else {
                 alert("Failed to extract job details. Please make sure you're on a job listing page.");
             }
@@ -24,7 +41,22 @@ document.getElementById("resumeUpload").addEventListener("change", async (event)
         let arrayBuffer = e.target.result;
         try {
             let text = await extractTextFromResume(arrayBuffer, file.type);
-            document.getElementById("resumeText").innerText = text;
+            let {name,email,phone,education,skills,experience} = await parseResume(text);
+            resumeText = `
+            Name: ${name}
+            Email: ${email}
+            Education: ${education}
+            Skills: ${skills}
+            Experience: ${experience}
+            `;
+            
+            // chrome.storage.sync.set({userName:name,userEmail:email,userPhone:phone,userEducation:education,userSkills:skills,userExperience:experience},()=>{
+            //     console.log("User data saved");
+            // });
+            chrome.storage.sync.set({resumeText:resumeText},()=>{
+                console.log("resume text saved")
+            })
+            
         } catch (error) {
             console.error("Error extracting text from resume:", error);
             alert("Failed to extract text from resume: " + error.message);
@@ -32,3 +64,4 @@ document.getElementById("resumeUpload").addEventListener("change", async (event)
     };
     reader.readAsArrayBuffer(file);
 });
+
