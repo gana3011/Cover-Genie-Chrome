@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoverGenie</title>
+    <script src="https://kit.fontawesome.com/06254707be.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <h2>Welcome to CoverGenie</h2><h2 id="name"></h2>
-    <button id="extractDetails">Extract</button>
-    <p id="coverLetter"></p>
+      <h1 id="companyName"></h1>
+<h2 id="jobTitle"></h2>
+<button id="generate">Generate</button>
+<textarea id="coverLetter" rows="10" cols="50" placeholder="Your cover letter will appear here..."></textarea>
+<img id="copy" src="assets/clipboard-solid.svg" alt="" width="20px" height="20px" style="cursor: pointer;">
     <script type="module" src="home.js"></script>
 </body>
 </html>
