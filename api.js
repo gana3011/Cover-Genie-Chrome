@@ -1,22 +1,13 @@
 import { API_KEY } from "./config.js";
 
-export const apiCall = async(resumeText,jobDetails)=>{
+export const apiCall = async(resumeText,jobDetails,prompt)=>{
     if (!resumeText || !jobDetails) {
         alert("Please upload a resume and extract job details first.");
         return;
     }    
-    console.log(resumeText);
-    console.log(jobDetails);
+    // console.log(resumeText);
+    // console.log(jobDetails);
     const api_endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`
-    let prompt = `Generate a personalized and compelling cover letter based on the following resume details:
-
-Resume:
-${resumeText}
-
-Job Description:
-${jobDetails}
-
-Ensure the cover letter is tailored to the job role, highlighting relevant skills, experience, and enthusiasm for the position. Maintain a professional yet engaging tone, keeping the length between 250-300 words.`;
     const requestBody = {
         contents: [{ parts: [{ text: prompt }] }]
     };
