@@ -18,7 +18,7 @@
     ],
     "web_accessible_resources": [
       {
-        "resources": ["libs/pdfjs/*.mjs", "config.js"],
+        "resources": ["libs/pdfjs/*.mjs", "config.js","libs/jspdf/jspdf.umd.min.js"],
         "matches": ["<all_urls>"]
       }
     ]
