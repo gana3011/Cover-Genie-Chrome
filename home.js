@@ -4,7 +4,8 @@ let jobDetails;
 
 // Get user's name from storage
 const { name: userName } = await chrome.storage.sync.get("name");
-document.getElementById("name").innerText = userName || "User";
+document.getElementById("greeting").innerHTML =  `Welcome to CoverGenie
+${userName}`;
 
 // Extract job details
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
