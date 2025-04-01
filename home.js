@@ -72,9 +72,7 @@ Ensure the message is polite, professional, and clearly conveys interest in the 
         const coverLetterTextarea = document.getElementById("coverLetter");
         coverLetterTextarea.value = responseText;
 
-        // Hide button after generation
         button.disabled = false;
-        button.style.visibility = "hidden";
     });
 });
 
@@ -93,4 +91,10 @@ document.getElementById("download").addEventListener("click",async()=>{
     doc.setFontSize(12);
     doc.text(coverLetterText,10,10,{maxWidth:180});
     doc.save("CoverGenie.pdf");
+})
+
+document.getElementById("home").addEventListener("click",()=>{
+    chrome.storage.sync.clear(() => {
+        window.location.href = "popup.html";
+    });
 })
