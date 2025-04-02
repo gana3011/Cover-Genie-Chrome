@@ -3,7 +3,7 @@
     "name": "Cover Letter Generator",
     "version": "1.0",
     "permissions": ["scripting", "activeTab", "storage"],
-    "host_permissions": ["https://www.linkedin.com/jobs/*", "https://www.indeed.com/viewjob*"],
+    "host_permissions": ["<all_urls>"],
     "action": {
       "default_popup": "popup.html"
     },
@@ -12,13 +12,13 @@
     },
     "content_scripts": [
       {
-        "matches": ["https://www.linkedin.com/jobs/*", "https://www.indeed.com/viewjob*"],
+        "matches": ["<all_urls>"],
         "js": ["content.js"]
       }
     ],
     "web_accessible_resources": [
       {
-        "resources": ["libs/pdfjs/*.mjs", "config.js","libs/jspdf/jspdf.umd.min.js"],
+        "resources": ["libs/pdfjs/*.mjs", "config.js","libs/jspdf/jspdf.umd.min.js","libs/jspdf/jspdf.plugin.autotable.js"],
         "matches": ["<all_urls>"]
       }
     ]

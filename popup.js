@@ -4,16 +4,39 @@ import { parseResume } from "./parseResume.js";
 
 let resumeText;
 
-const redirect = async() =>{
-const userName = await chrome.storage.sync.get("name");
-console.log(userName);
-if (userName){
-   
-        location.replace("home.html")
+const getName = () => {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get("name", (data) => {
+            let name = data.name;
+            if (Array.isArray(name)) {
+                name = name[0]; 
+            }
+            resolve(name || "Name not available");
+        });
+    });
+};
 
-    console.log("redirected");
+
+const getResumeText = () => {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get("resumeText", (data) => {
+            resolve(data.resumeText || "Resume data not available");
+        });
+    });
+};
+
+
+const redirect = async () => {
+    const name = await getName();
+    const resumeText = await getResumeText();  
+    if (name && resumeText && 
+        name !== "Name not available" && 
+        resumeText !== "Resume data not available") {
+        location.replace("home.html");
+    } 
 }
-}
+
+redirect();
 
 document.getElementById("resumeForm").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -26,7 +49,7 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
         let arrayBuffer = e.target.result;
         try {
             let text = await extractTextFromResume(arrayBuffer, file.type);
-            let {name,email,phone,education,skills,experience} = await parseResume(text);
+            let {name,email,education,skills,experience} = await parseResume(text);
             resumeText = `
             Name: ${name}
             Email: ${email}
@@ -39,12 +62,11 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
             //     console.log("User data saved");
             // });
             chrome.storage.sync.set({resumeText:resumeText},()=>{
-                console.log("resume text saved")
             });
 
             chrome.storage.sync.set({name:name},()=>{
-                console.log("name saved")
                 redirect();
+                console.log("redirected");
             });
             
         } catch (error) {
