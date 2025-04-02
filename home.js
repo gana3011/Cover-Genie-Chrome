@@ -113,17 +113,8 @@ document.getElementById("copy").addEventListener("click", () => {
 document.getElementById("download").addEventListener("click", async () => {
     const doc = new window.jspdf.jsPDF();
     const coverLetterText = document.getElementById("coverLetter").value;
-
     doc.setFontSize(12);
-
-    let splitText = doc.splitTextToSize(coverLetterText, 180);
-    let y = 10;
-
-    splitText.forEach((line) => {
-        doc.text(line, 10, y, { align: "justify" });
-        y += 7;
-    });
-
+    doc.text(coverLetterText, 10, 10, { maxWidth: 180 });
     doc.save("CoverGenie.pdf");
 });
 
