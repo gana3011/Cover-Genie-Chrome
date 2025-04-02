@@ -3,13 +3,30 @@ import { apiCall } from "./api.js";
 let jobDetails;
 
 // Get user's name from storage
-const { name: userName } = await chrome.storage.sync.get("name");
-document.getElementById("greeting").innerHTML =  `Welcome to CoverGenie
-${userName}`;
+const getUserName = () => {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get("name", (data) => {
+            resolve(data.name || "User");
+        });
+    });
+};
+const userName = await getUserName();
+document.getElementById("greeting").innerHTML =  `Welcome to CoverGenie<br>${userName}`;
 
 // Extract job details
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (!tabs.length) {
+        alert("No active tab found.");
+        return;
+    }
+
     chrome.tabs.sendMessage(tabs[0].id, { action: "extractJobDetails" }, async (response) => {
+        if (chrome.runtime.lastError) {
+            console.error("Error:", chrome.runtime.lastError.message);
+            alert("Could not extract job details.");
+            return;
+        }
+        
         if (response && response.companyName) {
             document.getElementById("companyName").innerText = response.companyName;
             document.getElementById("jobTitle").innerText = response.position;
@@ -23,6 +40,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         }
     });
 });
+
 
 // Function to get resume text from Chrome storage
 const getResumeText = () => {
@@ -42,7 +60,8 @@ document.querySelectorAll("#generateCoverLetter, #generateDm").forEach((button) 
         }
         button.disabled = true;
 
-        const resumeText = await getResumeText();
+        try {
+            const resumeText = await getResumeText();
         let prompt = "";
 
         if (button.id === "generateCoverLetter") {
@@ -71,8 +90,14 @@ Ensure the message is polite, professional, and clearly conveys interest in the 
         const responseText = await apiCall(resumeText, jobDetails, prompt);
         const coverLetterTextarea = document.getElementById("coverLetter");
         coverLetterTextarea.value = responseText;
-
-        button.disabled = false;
+        } 
+        catch (error) {
+        console.error("Error generating:", error);
+        alert("An error occurred while generating. Please try again.");
+        }
+        finally{
+            button.disabled = false;
+        }
     });
 });
 
@@ -85,16 +110,28 @@ document.getElementById("copy").addEventListener("click", () => {
         .catch((err) => console.error("Failed to copy:", err));
 });
 
-document.getElementById("download").addEventListener("click",async()=>{
+document.getElementById("download").addEventListener("click", async () => {
     const doc = new window.jspdf.jsPDF();
     const coverLetterText = document.getElementById("coverLetter").value;
-    doc.setFontSize(12);
-    doc.text(coverLetterText,10,10,{maxWidth:180});
-    doc.save("CoverGenie.pdf");
-})
 
-document.getElementById("home").addEventListener("click",()=>{
-    chrome.storage.sync.clear(() => {
-        window.location.href = "popup.html";
+    doc.setFontSize(12);
+
+    let splitText = doc.splitTextToSize(coverLetterText, 180);
+    let y = 10;
+
+    splitText.forEach((line) => {
+        doc.text(line, 10, y, { align: "justify" });
+        y += 7;
     });
-})
+
+    doc.save("CoverGenie.pdf");
+});
+
+document.getElementById("home").addEventListener("click", () => {
+    chrome.storage.sync.clear(() => {
+        setTimeout(() => {
+            window.location.href = "popup.html";
+        }, 500);
+    });
+});
+
