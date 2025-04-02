@@ -111,12 +111,25 @@ document.getElementById("copy").addEventListener("click", () => {
 });
 
 document.getElementById("download").addEventListener("click", async () => {
-    const doc = new window.jspdf.jsPDF();
+    const { jsPDF } = window.jspdf;
+
+    const doc = new jsPDF();
+
     const coverLetterText = document.getElementById("coverLetter").value;
-    doc.setFontSize(12);
-    doc.text(coverLetterText, 10, 10, { maxWidth: 180 });
+
+    const paragraphs = coverLetterText.split("\n").map(p => p.trim()).filter(p => p.length > 0);
+    const tableData = paragraphs.map(paragraph => [paragraph]);
+
+    doc.autoTable({
+        startY: 30,
+        margin: { left: 10, right: 10 },
+        body: tableData,
+        styles: { fontSize: 12, cellWidth: 'auto', halign: 'justify' }, 
+        theme: 'plain' 
+    });
     doc.save("CoverGenie.pdf");
 });
+
 
 document.getElementById("home").addEventListener("click", () => {
     chrome.storage.sync.clear(() => {
