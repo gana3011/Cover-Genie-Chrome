@@ -6,11 +6,31 @@ let jobDetails;
 const getUserName = () => {
     return new Promise((resolve) => {
         chrome.storage.sync.get("name", (data) => {
-            resolve(data.name || "User");
+            resolve(Array.isArray(data.name) ? data.name[0] : data.name || "User");
         });
     });
 };
+
+//user email from storage
+const getUserEmail = () => {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get("email", (data) => {
+            resolve(data.email|| "Email");
+        });
+    });
+};
+
+//user phone no from storage
+const getUserPhone = () => {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get("phone", (data) => {
+            resolve(data.phone || "Phone");
+        });
+    });
+};
+
 const userName = await getUserName();
+
 document.getElementById("greeting").innerHTML =  `Welcome to CoverGenie<br>${userName}`;
 
 // Extract job details
@@ -41,6 +61,12 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     });
 });
 
+const getPersonalDetails = async ()=>{
+    const email = await getUserEmail();
+    const phone = await getUserPhone();
+    return {email,phone};
+}
+
 
 // Function to get resume text from Chrome storage
 const getResumeText = () => {
@@ -62,18 +88,26 @@ document.querySelectorAll("#generateCoverLetter, #generateDm").forEach((button) 
 
         try {
             const resumeText = await getResumeText();
-        let prompt = "";
+            const {email,phone} = await getPersonalDetails();
+            console.log(email);
+            console.log(phone);
+            console.log(userName);
+            let prompt = "";
 
         if (button.id === "generateCoverLetter") {
             prompt = `Generate a personalized and compelling cover letter based on the following resume details:
 
-Resume:
-${resumeText}
-
-Job Description:
-${jobDetails}
-
-Ensure the cover letter is tailored to the job role, highlighting relevant skills, experience, and enthusiasm for the position. Maintain a professional yet engaging tone, keeping the length between 250-300 words.`;
+            Candidate Information:
+            - **Name:** ${userName}
+             - **Phone:** ${phone}
+            - **Email:** ${email}
+            Resume:
+            ${resumeText}
+            
+            Job Description:
+            ${jobDetails}
+            
+            Ensure the cover letter is tailored to the job role, highlighting relevant skills, experience, and enthusiasm for the position. Maintain a professional yet engaging tone, keeping the length between 250-300 words.`;
         } else if (button.id === "generateDm") {
             prompt = `Generate a concise and engaging LinkedIn DM to reach out to a recruiter or hiring manager based on the following details:
 

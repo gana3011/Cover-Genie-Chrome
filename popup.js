@@ -51,8 +51,6 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
             let text = await extractTextFromResume(arrayBuffer, file.type);
             let {name,email,phone,education,skills,experience} = await parseResume(text);
             resumeText = `
-            Name: ${name}
-            Email: ${email}
             Education: ${education}
             Skills: ${skills}
             Experience: ${experience}
@@ -63,6 +61,10 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
             // });
             chrome.storage.sync.set({resumeText:resumeText},()=>{
             });
+
+            chrome.storage.sync.set({email:email});
+
+            chrome.storage.sync.set({phone:phone});
 
             chrome.storage.sync.set({name:name},()=>{
                 redirect();
