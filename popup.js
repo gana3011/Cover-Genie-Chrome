@@ -49,7 +49,7 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
         let arrayBuffer = e.target.result;
         try {
             let text = await extractTextFromResume(arrayBuffer, file.type);
-            let {name,email,education,skills,experience} = await parseResume(text);
+            let {name,email,phone,education,skills,experience} = await parseResume(text);
             resumeText = `
             Name: ${name}
             Email: ${email}
