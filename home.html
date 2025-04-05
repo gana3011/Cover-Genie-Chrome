@@ -1,22 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="home.css" />
     <title>CoverGenie</title>
-</head>
-<body>
-    <h2 id="greeting"></h2>
-    <img id="home" src="assets/house-solid.svg" alt="" width="20px" height="20px" style="cursor: pointer;">
-    <h1 id="companyName"></h1>
-<h2 id="jobTitle"></h2>
-<button id="generateCoverLetter">Generate Cover Letter</button>
-<button id="generateDm">Generate Linkedn Dm</button>
-<textarea id="coverLetter" rows="10" cols="50" placeholder="Your cover letter will appear here..."></textarea>
-<img id="copy" src="assets/clipboard-solid.svg" alt="" width="20px" height="20px" style="cursor: pointer;">
-<img id="download" src="assets/file-arrow-down-solid.svg" alt="" width="20px" height="20px" style="cursor: pointer;">
-<script src="./libs/jspdf/jspdf.umd.min.js"></script>
-<script src="./libs/jspdf/jspdf.plugin.autotable.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <h2 id="greeting"></h2>
+      <img
+        id="home"
+        src="assets/house-solid.svg"
+        alt=""
+      />
+    </div>
+    <h2 id="companyName"></h1>
+    <h2 id="jobTitle"></h2>
+    <button id="generateCoverLetter">Generate Cover Letter</button>
+    <button id="generateDm">Generate Linkedn Dm</button>
+    <textarea
+      id="coverLetter"
+      rows="10"
+      cols="50"
+      placeholder="Your cover letter will appear here..."
+    ></textarea>
+    <img
+      id="copy"
+      src="assets/clipboard-solid.svg"
+      alt=""
+    />
+    <img
+      id="download"
+      src="assets/file-arrow-down-solid.svg"
+      alt=""
+    />
+    <script src="./libs/jspdf/jspdf.umd.min.js"></script>
+    <script src="./libs/jspdf/jspdf.plugin.autotable.js"></script>
     <script type="module" src="home.js"></script>
-</body>
+  </body>
 </html>

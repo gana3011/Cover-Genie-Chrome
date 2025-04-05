@@ -79,3 +79,7 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
     reader.readAsArrayBuffer(file);
 });
 
+document.getElementById("resumeUpload").addEventListener("change", function() {
+    const fileName = this.files[0] ? this.files[0].name : "No file chosen";
+    document.getElementById("fileName").textContent = fileName;
+});
