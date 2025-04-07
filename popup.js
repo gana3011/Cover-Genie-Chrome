@@ -59,17 +59,10 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
             // chrome.storage.sync.set({userName:name,userEmail:email,userPhone:phone,userEducation:education,userSkills:skills,userExperience:experience},()=>{
             //     console.log("User data saved");
             // });
-            chrome.storage.sync.set({resumeText:resumeText},()=>{
-            });
-
-            chrome.storage.sync.set({email:email});
-
-            chrome.storage.sync.set({phone:phone});
-
-            chrome.storage.sync.set({name:name},()=>{
+            chrome.storage.sync.set({resumeText:resumeText, email:email, phone:phone, name,name},()=>{
                 redirect();
-                console.log("redirected");
             });
+
             
         } catch (error) {
             console.error("Error extracting text from resume:", error);
