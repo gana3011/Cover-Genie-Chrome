@@ -1,5 +1,5 @@
 export async function parseResume(text){
-    let parsedText = "";
+
     let name = text.match (/^[A-Z][a-z]+\s[A-Z][a-z]+\s?[A-Z]?/) || "Name not found";
 
     let email = text.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/)?.[0] || "Email not found";

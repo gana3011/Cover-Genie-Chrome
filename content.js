@@ -14,6 +14,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
             positionElement = document.querySelector(".styles_jd-header-title__rZwM1");
             jobDescriptionElement = document.querySelector(".styles_JDC__dang-inner-html__h0K4t");
         }
+
+        else if(/^https?:\/\/in\.indeed\.com/.test(url)){
+            companyElement = document.querySelector(".jobsearch-JobInfoHeader-companyNameSimple");
+            positionElement = document.querySelector('h2[data-testid="simpler-jobTitle"]');
+            jobDescriptionElement = document.getElementById("jobDescriptionText");
+        }
+        
         let companyName = companyElement ? companyElement.innerText.trim() : "Company Not Found";
         let position = positionElement ? positionElement.innerText.trim() : "Position Not Found"; 
         let jobDescription = jobDescriptionElement ? jobDescriptionElement.innerText.trim() : "Job Description not Found";

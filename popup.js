@@ -49,10 +49,8 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
         let arrayBuffer = e.target.result;
         try {
             let text = await extractTextFromResume(arrayBuffer, file.type);
-            let {name,email,education,skills,experience} = await parseResume(text);
+            let {name,email,phone,education,skills,experience} = await parseResume(text);
             resumeText = `
-            Name: ${name}
-            Email: ${email}
             Education: ${education}
             Skills: ${skills}
             Experience: ${experience}
@@ -61,13 +59,10 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
             // chrome.storage.sync.set({userName:name,userEmail:email,userPhone:phone,userEducation:education,userSkills:skills,userExperience:experience},()=>{
             //     console.log("User data saved");
             // });
-            chrome.storage.sync.set({resumeText:resumeText},()=>{
+            chrome.storage.sync.set({resumeText:resumeText, email:email, phone:phone, name,name},()=>{
+                redirect();
             });
 
-            chrome.storage.sync.set({name:name},()=>{
-                redirect();
-                console.log("redirected");
-            });
             
         } catch (error) {
             console.error("Error extracting text from resume:", error);
@@ -77,3 +72,7 @@ document.getElementById("resumeForm").addEventListener("submit", async (event) =
     reader.readAsArrayBuffer(file);
 });
 
+document.getElementById("resumeUpload").addEventListener("change", function() {
+    const fileName = this.files[0] ? this.files[0].name : "No file chosen";
+    document.getElementById("fileName").textContent = fileName;
+});
