@@ -20,6 +20,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) =>{
             positionElement = document.querySelector('h2[data-testid="simpler-jobTitle"]');
             jobDescriptionElement = document.getElementById("jobDescriptionText");
         }
+
+        else if(/^https?:\/\/(www\.)?wellfound\.com\/jobs/.test(url)){
+            companyElement = document.querySelector(`a[href^="/company/"] span.font-semibold`);
+            positionElement = document.querySelector('h1.styles_header__ZlR7s');
+            jobDescriptionElement = document.querySelector("div.styles_description__36q7q");
+        }
         
         let companyName = companyElement ? companyElement.innerText.trim() : "Company Not Found";
         let position = positionElement ? positionElement.innerText.trim() : "Position Not Found"; 
